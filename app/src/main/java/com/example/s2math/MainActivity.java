@@ -21,7 +21,8 @@ public class MainActivity extends AppCompatActivity {
 
     private ArrayList<Pregunta> preguntas;
 
-    private Button IntentarDeNuevo;
+    private Button intentarDeNuevo;
+
 
     private int punticos = 0;
     private int contador = 30;
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         tiempo = findViewById(R.id.tiempo);
         buttonResponder = findViewById(R.id.buttonResponder);
         TextPuntaje = findViewById(R.id.TextPuntaje);
-        IntentarDeNuevo = findViewById(R.id.IntentarDeNuevo);
+        intentarDeNuevo = findViewById(R.id.intentarDeNuevo);
 
 
 
@@ -52,40 +53,16 @@ public class MainActivity extends AppCompatActivity {
             muestra.setText(""+preguntas.get(i).getDuda());
         }
 
-        new Thread(
 
-                ()-> {
-                    while (contador > 0) {
-                        contador--;
-                        runOnUiThread(()->{
-                            tiempo.setText(""+contador);
-                            if(contador >0){
-                                IntentarDeNuevo.setVisibility(View.GONE);
-                            } else {
-                                IntentarDeNuevo.setVisibility(View.VISIBLE);
-                            }
-
-                        });
-                        try{
-                        Thread.sleep(300);
-                    } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    }
-        ).start();
 
         buttonResponder.setOnClickListener(
-                (v) -> {
+                (View) -> {
                     String responder = editar.getText().toString();
                     for (int i = 0; i < preguntas.size(); i++) {
                         if (preguntas.get(i).getRespuesta().equals(responder)) {
                             preguntas.get(i).ejercicio();
                             muestra.setText("" + preguntas.get(i).getDuda());
 
-
-                            preguntas.get(i).ejercicio();
-                            muestra.setText("" + preguntas.get(i).getDuda());
                             //aqui se aumenta el puntaje cuando es correcto
                             punticos += 10;
                             TextPuntaje.setText("" + punticos);
@@ -98,13 +75,70 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
 
+        intentarDeNuevo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                for (int i = 0; i < preguntas.size(); i++) {
+
+                        preguntas.get(i).ejercicio();
+                        muestra.setText("" + preguntas.get(i).getDuda());
+                    }
+
+                punticos = 0;
+                contador = 30;
+                TextPuntaje.setText("" + punticos);
 
 
-        
+                new Thread(
+
+                        () -> {
+                            while (contador > 0) {
+                                contador--;
+                                runOnUiThread(() -> {
+                                    tiempo.setText("" + contador);
+                                    if (contador > 0) {
+                                        intentarDeNuevo.setVisibility(View.GONE);
+                                    } else {
+                                        intentarDeNuevo.setVisibility(View.VISIBLE);
+                                    }
+
+                                });
+                                try {
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                ).start();
+            }
+        });
 
 
 
+        new Thread(
 
+                () -> {
+                    while (contador > 0) {
+                        contador--;
+                        runOnUiThread(() -> {
+                            tiempo.setText("" + contador);
+                            if (contador > 0) {
+                                intentarDeNuevo.setVisibility(View.GONE);
+                            } else {
+                                intentarDeNuevo.setVisibility(View.VISIBLE);
+                            }
+
+                        });
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+        ).start();
 
     }
 }
