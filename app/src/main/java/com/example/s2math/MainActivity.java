@@ -68,6 +68,13 @@ public class MainActivity extends AppCompatActivity {
                             TextPuntaje.setText("" + punticos);
 
                         } else {
+                            if(punticos > 0){
+                                punticos -= 5;
+                                TextPuntaje.setText("" + punticos);
+                            }
+
+
+
 
                         }
 
